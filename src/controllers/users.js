@@ -1,13 +1,26 @@
 import connection from "../database/database.js";
 import bcrypt from 'bcrypt';
 import { v4 as uuid } from "uuid";
+import { signUpSchema, signInSchema } from "../schemas/usersSchemas.js";
 
 const signUp = async (req, res) => {
     const {name, email, password} = req.body;
 
+    if(signUpSchema.validate({name, email, password}).error) {
+        return res.sendStatus(400);
+    }
+
     const passwordHash = bcrypt.hashSync(password, 10);
 
     try {
+        const emailCheck = await connection.query(`
+            SELECT * FROM users
+            WHERE email = $1
+        `, [email]);
+        if(emailCheck.rowCount !== 0) {
+            return res.sendStatus(409);
+        }
+
         await connection.query(`
             INSERT INTO users 
             (name, email, password) 
@@ -22,6 +35,10 @@ const signUp = async (req, res) => {
 
 const signIn = async (req, res) => {
     const { email, password } = req.body;
+
+    if(signInSchema.validate({email, password}).error) {
+        return res.sendStatus(400);
+    }
 
     try {
         const result = await connection.query(`
@@ -39,7 +56,7 @@ const signIn = async (req, res) => {
                 VALUES ($1, $2)
             `, [user.id, token]);
 
-            res.status(200).send(token);
+            res.status(200).send({token, name: user.name});
         } else {
             res.sendStatus(401);
         }
