@@ -17,6 +17,15 @@ describe("POST /sign-up", () => {
         `);
     });
 
+    afterAll(async () => {
+        await connection.query(`
+        DELETE FROM users 
+        WHERE email = 'teste@409.com.br'
+        `);
+
+        connection.end();
+      });
+
     it("returns 403 for invalid body", async () => {
         const body = {
             name: "",
