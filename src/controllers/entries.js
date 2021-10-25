@@ -61,7 +61,7 @@ const postEntry = async (req, res) => {
                 VALUES ($1, NOW(), $2, $3::decimal)
             `, [user.id, description, value]);
 
-            res.sendStatus(200);
+            res.sendStatus(201);
         } else {
             res.sendStatus(401);
         }
