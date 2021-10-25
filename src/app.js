@@ -13,4 +13,4 @@ app.post('/sign-in', signIn);
 app.get('/entries', getEntries);
 app.post('/entries', postEntry);
 
-app.listen(4000);
+export default app;
