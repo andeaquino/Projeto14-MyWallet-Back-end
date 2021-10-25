@@ -7,7 +7,7 @@ const signUp = async (req, res) => {
     const {name, email, password} = req.body;
 
     if(signUpSchema.validate({name, email, password}).error) {
-        return res.sendStatus(400);
+        return res.sendStatus(403);
     }
 
     const passwordHash = bcrypt.hashSync(password, 10);
@@ -37,7 +37,7 @@ const signIn = async (req, res) => {
     const { email, password } = req.body;
 
     if(signInSchema.validate({email, password}).error) {
-        return res.sendStatus(400);
+        return res.sendStatus(403);
     }
 
     try {

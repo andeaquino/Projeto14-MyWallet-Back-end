@@ -42,8 +42,8 @@ const postEntry = async (req, res) => {
     const token = req.headers.authorization?.replace('Bearer ', '');
     const {description, value} = req.body;
 
-    if(!token) return res.sendStatus(401);
-    if(entrySchema.validate({description, value}).error || value === 0) return res.sendStatus(400);
+    if(!token) return res.sendStatus(403);
+    if(entrySchema.validate({description, value}).error || value === 0) return res.sendStatus(403);
 
     try {
         const result = await connection.query(`
