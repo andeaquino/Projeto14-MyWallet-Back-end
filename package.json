@@ -23,8 +23,9 @@
     "pg": "^8.7.1",
     "uuid": "^8.3.2"
   },
-   "devDependencies": {
-   "supertest": "^6.1.6",
-    "jest": "^27.3.1"
+  "devDependencies": {
+    "faker": "^5.5.3",
+    "jest": "^27.3.1",
+    "supertest": "^6.1.6"
   }
 }
