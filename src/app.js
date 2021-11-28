@@ -1,7 +1,8 @@
 import express from "express";
 import cors from "cors";
+import auth from "./middleware/auth.js";
 import * as userController from "./controllers/userController.js";
-import { getEntries, postEntry } from "./controllers/entries.js";
+import * as entriesController from "./controllers/entriesController.js";
 
 const app = express();
 
@@ -12,7 +13,7 @@ app.post("/sign-up", userController.signUp);
 
 app.post("/sign-in", userController.signIn);
 
-app.get("/entries", getEntries);
-app.post("/entries", postEntry);
+app.get("/entries", auth, entriesController.getEntries);
+app.post("/entries", auth, entriesController.postEntry);
 
 export default app;
