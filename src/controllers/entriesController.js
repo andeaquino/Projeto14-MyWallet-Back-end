@@ -3,9 +3,9 @@ import { entrySchema } from "../schemas/entriesSchema.js";
 
 const getEntries = async (req, res) => {
   try {
-    const entries = entriesRepository.findUserEntries(req.userId);
+    const entries = await entriesRepository.findUserEntries(req.userId);
 
-    const total = entriesRepository.getSumEntries(req.userId);
+    const total = await entriesRepository.getSumEntries(req.userId);
 
     res.send({ entries, total });
   } catch {
