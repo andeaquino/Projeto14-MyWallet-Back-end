@@ -5,8 +5,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "NODE_ENV=prod JWT_SECRET=chavesupersecreta node server.js",
-    "test": "NODE_ENV=test JWT_SECRET=chavesupersecreta npx jest -i --watch"
+    "start": "NODE_ENV=prod node server.js",
+    "test": "NODE_ENV=test npx jest -i --watch"
   },
   "keywords": [],
   "author": "",
