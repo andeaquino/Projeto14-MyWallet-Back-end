@@ -51,7 +51,7 @@ describe("GET /entries", () => {
 
   it("return 401 for user not authorized", async () => {
     const result = await supertest(app).get("/entries");
-    const status = result.status;
+    const { status } = result;
     expect(status).toEqual(401);
   });
 
@@ -61,7 +61,11 @@ describe("GET /entries", () => {
     const result = await supertest(app)
       .get("/entries")
       .set("Authorization", `Bearer ${token}`);
-    const status = result.status;
-    expect(status).toEqual(200);
+    const { body } = result;
+    expect(body).toEqual(
+      expect.objectContaining({
+        entries: expect.any(Array),
+      })
+    );
   });
 });
