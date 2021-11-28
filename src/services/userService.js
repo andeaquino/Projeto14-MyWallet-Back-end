@@ -16,7 +16,7 @@ async function authenticate(email, password) {
     process.env.JWT_SECRET
   );
 
-  return token;
+  return { token, name: user.name };
 }
 
 async function registerUser(name, email, password) {
