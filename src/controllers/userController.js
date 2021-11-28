@@ -31,7 +31,7 @@ const signIn = async (req, res) => {
 
     const user = await userService.authenticate(email, password);
 
-    if (user.token) {
+    if (user) {
       return res.send({
         token: user.token,
         name: user.name,
