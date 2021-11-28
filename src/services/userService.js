@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import * as userRepository from "../repositories/userRepository.js";
+import * as userRepository from "../repositories/userRespository.js";
 
 async function authenticate(email, password) {
   const user = await userRepository.findByEmail(email);
