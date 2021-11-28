@@ -18,7 +18,7 @@ async function findUserEntries(userId) {
 
 async function getSumEntries(userId) {
   const resultTotal = await connection.query(
-    ` SELECT SUM(value) FROM entries WHERE "userId" = $1`,
+    ` SELECT SUM(value) FROM entries WHERE user_id = $1`,
     [userId]
   );
   return resultTotal.rows[0].sum;
