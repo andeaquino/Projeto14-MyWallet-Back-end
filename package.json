@@ -5,7 +5,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "NODE_ENV=prod JWT_SECRET=chavesupersecreta node server.js",
+    "test": "NODE_ENV=test JWT_SECRET=chavesupersecreta npx jest -i --watch"
   },
   "keywords": [],
   "author": "",
@@ -17,11 +18,13 @@
     "bcrypt": "^5.0.1",
     "cors": "^2.8.5",
     "express": "^4.17.1",
-    "jest": "^27.3.1",
     "joi": "^17.4.2",
     "jsonwebtoken": "^8.5.1",
     "pg": "^8.7.1",
-    "supertest": "^6.1.6",
     "uuid": "^8.3.2"
+  },
+   "devDependencies": {
+   "supertest": "^6.1.6",
+    "jest": "^27.3.1"
   }
 }
