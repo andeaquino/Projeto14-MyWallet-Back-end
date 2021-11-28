@@ -11,7 +11,7 @@ async function authenticate(email, password) {
 
   const token = jwt.sign(
     {
-      id: user.id,
+      userId: user.id,
     },
     process.env.JWT_SECRET
   );
