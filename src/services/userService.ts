@@ -23,9 +23,8 @@ async function registerUser(user: UserCreate) {
 
 async function authenticate(user: UserCreate) {
   const userInfo = await getRepository(User).findOne({ email: user.email });
-  const isPasswordValid = bcrypt.compareSync(user.password, userInfo.password);
 
-  if (!userInfo || !isPasswordValid) {
+  if (!userInfo || !bcrypt.compareSync(user.password, userInfo.password)) {
     return false;
   }
 
