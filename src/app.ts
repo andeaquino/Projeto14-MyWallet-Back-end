@@ -6,13 +6,15 @@ import "reflect-metadata";
 
 import connectDatabase from "./database";
 
-import * as userController from "./controllers/userController";
+import userRouter from "./routers/userRouter";
+import entryRouter from './routers/entryRouter'
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.get("/users", userController.getUsers);
+app.use("/", userRouter);
+app.use("/entries", entryRouter);
 
 export async function init () {
   await connectDatabase();
