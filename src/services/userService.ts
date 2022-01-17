@@ -1,19 +1,16 @@
-import { Request, Response } from "express";
 import { getRepository } from "typeorm";
 import bcrypt from 'bcrypt';
 import jwt from "jsonwebtoken";
 
 import User from "../entities/User";
 
-export async function getUsers () {
-  const users = await getRepository(User).find({
-    select: ["id", "email"]
-  });
-  
-  return users;
+interface UserCreate {
+  name?: string;
+  email: string;
+  password: string;
 }
 
-async function registerUser(user: User) {
+async function registerUser(user: UserCreate) {
   const existingUser = await getRepository(User).find({ email: user.email });
 
   if (existingUser.length !== 0) return false;
@@ -24,18 +21,19 @@ async function registerUser(user: User) {
   return true;
 }
 
-async function authenticate(user: User) {
-  const existingUser = await getRepository(User).findOne({ email: user.email });
+async function authenticate(user: UserCreate) {
+  const userInfo = await getRepository(User).findOne({ email: user.email });
+  const isPasswordValid = bcrypt.compareSync(user.password, userInfo.password);
 
-  if (!existingUser || !bcrypt.compareSync(existingUser.password, user.password)) {
+  if (!userInfo || !isPasswordValid) {
     return false;
   }
 
   const token = jwt.sign({
-    userId: existingUser.id,
+    userId: userInfo.id,
   }, process.env.JWT_SECRET);
 
-  return { token };
+  return { token, name: userInfo.name };
 }
 
 export { registerUser, authenticate };

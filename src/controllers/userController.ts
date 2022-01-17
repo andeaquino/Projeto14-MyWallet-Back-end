@@ -3,16 +3,6 @@ import { Request, Response } from "express";
 import * as userService from "../services/userService";
 import { signUpSchema, signInSchema } from "../schemas/usersSchemas";
 
-export async function getUsers (req: Request, res: Response) {
-  try {
-    const users = await userService.getUsers();
-    res.send(users);
-  } catch (err) {
-    console.error(err);
-    res.sendStatus(500);
-  }
-}
-
 async function signUp(req: Request, res: Response) {
   try {
     const isBodyInvalid = signUpSchema.validate(req.body).error
@@ -39,10 +29,7 @@ async function signIn(req: Request, res: Response) {
     const user = await userService.authenticate(req.body);
 
     if (user) {
-      return res.send({
-        token: user.token,
-        name: req.body.name,
-      });
+      return res.send(user);
     }
     return res.sendStatus(401);
   } catch (err) {
