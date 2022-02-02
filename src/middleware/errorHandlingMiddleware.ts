@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Request, Response, NextFunction } from "express";
 import http from "../enums/http.status";
 
 import InvalidDataError from "../errors/InvalidData";
@@ -9,12 +9,14 @@ import NotFoundError from "../errors/NotFoundError";
 export default function errorHandlingMiddleware(
   err: Error,
   _req: Request,
-  res: Response
+  res: Response,
+  _next: NextFunction
 ) {
+  console.error(err);
+
   if (err instanceof InvalidDataError) {
     return res.status(http.UNPROCESSABLE_ENTITY).send({
       message: err.message,
-      details: err.details,
     });
   }
 

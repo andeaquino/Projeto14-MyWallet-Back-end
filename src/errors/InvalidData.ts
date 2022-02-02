@@ -1,10 +1,6 @@
 export default class InvalidDataError extends Error {
-  details: string[];
-
-  constructor(name: string, details: string[]) {
-    super(name);
-
-    this.details = details;
+  constructor(message: string) {
+    super(message);
     this.name = "InvalidDataError";
   }
 }
