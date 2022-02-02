@@ -1,38 +1,26 @@
-import { getRepository } from "typeorm";
 import bcrypt from 'bcrypt';
 import jwt from "jsonwebtoken";
 
 import User from "../entities/User";
+import UnauthorizedError from "../errors/Unauthorized";
 
-interface UserCreate {
-  name?: string;
-  email: string;
-  password: string;
+async function registerUser(name: string, email: string, password: string) {
+  const user = await User.createNew(name, email, password);
+  return user;
 }
 
-async function registerUser(user: UserCreate) {
-  const existingUser = await getRepository(User).find({ email: user.email });
+async function authenticate(email: string, password: string) {
+  const user = await User.findOne({email});
 
-  if (existingUser.length !== 0) return false;
-
-  user.password = bcrypt.hashSync(user.password, 12);
-  await getRepository(User).insert(user);
-
-  return true;
-}
-
-async function authenticate(user: UserCreate) {
-  const userInfo = await getRepository(User).findOne({ email: user.email });
-
-  if (!userInfo || !bcrypt.compareSync(user.password, userInfo.password)) {
-    return false;
+  if (!user || !bcrypt.compareSync(password, user.password)) {
+    throw new UnauthorizedError();
   }
 
   const token = jwt.sign({
-    userId: userInfo.id,
+    userId: user.id,
   }, process.env.JWT_SECRET);
 
-  return { token, name: userInfo.name };
+  return { token, name: user.name };
 }
 
 export { registerUser, authenticate };

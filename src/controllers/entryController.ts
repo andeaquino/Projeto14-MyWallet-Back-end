@@ -1,8 +1,6 @@
-import { Request, Response } from "express";
-interface UserInfoRequest extends Request {
-    userId: number;
-}
+import { Response } from "express";
 
+import UserInfoRequest from "../interfaces/userRequest";
 import * as entryService from "../services/entryService";
 import { entrySchema } from "../schemas/entriesSchema";
 
