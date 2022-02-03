@@ -11,4 +11,13 @@ export default class Category extends BaseEntity {
 
   @OneToMany(() => Entry, (entry) => entry.category)
   entries: Entry[];
+
+  static async findEntries(userId: number) {
+    const categoryEntries = await this.createQueryBuilder("categories")
+      .leftJoinAndSelect("categories.entries", "entries")
+      .where("entries.user_id = :id", { id: userId })
+      .getMany();
+
+    return categoryEntries;
+  }
 }
