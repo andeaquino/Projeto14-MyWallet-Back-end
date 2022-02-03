@@ -1,41 +1,34 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
+import http from "../enums/http.status";
 
-import * as userService from "../services/userService";
+import * as service from "../services/userService";
 import { signUpSchema, signInSchema } from "../schemas/usersSchemas";
+import InvalidDataError from "../errors/InvalidData";
 
-async function signUp(req: Request, res: Response) {
+export async function signUp(req: Request, res: Response, next: NextFunction) {
   try {
-    const isBodyInvalid = signUpSchema.validate(req.body).error
-    if (isBodyInvalid) return res.sendStatus(403);
-
-    const user = await userService.registerUser(req.body);
-
-    if (!user) {
-      return res.sendStatus(409);
+    const isBodyInvalid = signUpSchema.validate(req.body).error;
+    if (isBodyInvalid) {
+      throw new InvalidDataError("Email ou senha inválidos!");
     }
 
-    return res.sendStatus(201);
+    const user = await service.registerUser(req.body.name, req.body.email, req.body.password);
+    res.status(http.CREATED).send(user);
   } catch (err) {
-    console.error(err);
-    return res.sendStatus(500);
+    next(err);
   }
 }
 
-async function signIn(req: Request, res: Response) {
+export async function signIn(req: Request, res: Response, next: NextFunction) {
   try {
     const isBodyInvalid = signInSchema.validate(req.body).error
-    if (isBodyInvalid) return res.sendStatus(403);
-
-    const user = await userService.authenticate(req.body);
-
-    if (user) {
-      return res.send(user);
+    if (isBodyInvalid) {
+      throw new InvalidDataError("Email ou senha inválidos!");
     }
-    return res.sendStatus(401);
+
+    const userData = await service.authenticate(req.body.email, req.body.password);
+    res.send(userData);
   } catch (err) {
-    console.error(err);
-    return res.sendStatus(500);
+    next(err);
   }
 }
-
-export { signUp, signIn };

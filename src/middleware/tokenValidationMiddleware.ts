@@ -1,11 +1,9 @@
 import jwt from 'jsonwebtoken';
-import { Request, Response, NextFunction } from 'express';
+import { Response, NextFunction } from 'express';
 
-interface UserInfoRequest extends Request {
-    userId: any;
-}
+import UserInfoRequest from '../interfaces/userRequest';
 
-async function auth(req: UserInfoRequest, res: Response, next: NextFunction) {
+async function authenticationMiddleware(req: UserInfoRequest, res: Response, next: NextFunction) {
   const token = req.headers.authorization?.replace('Bearer ', '');
   const secretKey = process.env.JWT_SECRET;
 
@@ -19,4 +17,4 @@ async function auth(req: UserInfoRequest, res: Response, next: NextFunction) {
   });
 }
 
-export default auth;
+export default authenticationMiddleware;

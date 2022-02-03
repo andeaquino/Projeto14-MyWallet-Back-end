@@ -1,9 +1,9 @@
 import express from 'express';
-import * as entryController from "../controllers/entryController";
+import * as controller from "../controllers/entryController";
 
 const router = express.Router();
 
-router.get('', entryController.getEntries);
-router.post('', entryController.postEntry);
+router.get('/', controller.getEntries);
+router.post('/', controller.postEntry);
 
 export default router;

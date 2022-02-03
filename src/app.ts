@@ -7,15 +7,19 @@ import "reflect-metadata";
 import connectDatabase from "./database";
 
 import userRouter from "./routers/userRouter";
-import entryRouter from './routers/entryRouter'
-import auth from "./middleware/auth";
+import entryRouter from './routers/entryRouter';
+
+import authenticationMiddleware from "./middleware/tokenValidationMiddleware";
+import errorHandlingMiddleware from "./middleware/errorHandlingMiddleware";
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
 app.use("", userRouter);
-app.use("/entries", auth, entryRouter);
+app.use("/entries", authenticationMiddleware, entryRouter);
+
+app.use(errorHandlingMiddleware);
 
 export async function init () {
   await connectDatabase();

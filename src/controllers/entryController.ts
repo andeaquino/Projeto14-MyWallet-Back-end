@@ -1,40 +1,33 @@
-import { Request, Response } from "express";
-interface UserInfoRequest extends Request {
-    userId: number;
-}
+import { NextFunction, Response } from "express";
+import http from "../enums/http.status";
 
-import * as entryService from "../services/entryService";
+import UserInfoRequest from "../interfaces/userRequest";
+import * as service from "../services/entryService";
 import { entrySchema } from "../schemas/entriesSchema";
+import InvalidDataError from "../errors/InvalidData";
 
-async function getEntries(req: UserInfoRequest, res: Response) {
+async function getEntries(req: UserInfoRequest, res: Response, next: NextFunction) {
   try {
-		const entries = await entryService.findUserEntries(req.userId);
-
-		const total = await entryService.findEntriesSum(req.userId);
-
-    return res.send({ entries, total });
+		const userEntries = await service.findUserEntries(req.userId);
+    return res.send(userEntries);
   } catch  (err) {
-    console.error(err);
-    return res.sendStatus(500);
-  }
-    
+     next(err);
+  }  
 }
 
-async function postEntry(req: UserInfoRequest, res: Response) {
-	const { description, value } = req.body;
-	const isBodyInvalid = entrySchema.validate(req.body).error;
-  if (isBodyInvalid || value === 0) return res.sendStatus(403);
+async function postEntry(req: UserInfoRequest, res: Response, next: NextFunction) {  
+  try {
+    const { description, value, category } = req.body;
+    const isBodyInvalid = entrySchema.validate(req.body).error;
+    if (isBodyInvalid || value === 0) {
+      throw new InvalidDataError("Entrada inválida!");
+    }
 
-	const entry = { userId: req.userId, description, value };
-	try {
-    await entryService.createEntry(entry);
-
-    return res.sendStatus(201);
+    const entry = await service.createEntry(req.userId, description, value, category);
+    res.status(http.CREATED).send(entry);
   } catch  (err) {
-    console.error(err);
-    return res.sendStatus(500);
+     next(err);
   }
-    
 }
 
 export { getEntries, postEntry };
