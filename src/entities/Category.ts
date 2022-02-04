@@ -9,14 +9,19 @@ export default class Category extends BaseEntity {
   @Column()
   name: string;
 
+  @Column()
+  color: string;
+
   @OneToMany(() => Entry, (entry) => entry.category)
   entries: Entry[];
 
   static async findEntries(userId: number) {
     const categoryEntries = await this.createQueryBuilder("categories")
-      .leftJoinAndSelect("categories.entries", "entries")
+      .leftJoin("categories.entries", "entries")
+      .addSelect("SUM(entries.value)", "sum")
       .where("entries.user_id = :id", { id: userId })
-      .getMany();
+      .groupBy("categories.id")
+      .getRawMany();
 
     return categoryEntries;
   }

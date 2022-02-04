@@ -6,7 +6,7 @@ export default class Entry extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
     
-  @Column({name: 'user_id'})
+  @Column({ name: 'user_id' })
   userId: number;
 
   @Column()
@@ -15,7 +15,7 @@ export default class Entry extends BaseEntity {
   @Column()
   description: string;
     
-	@Column("decimal", { scale: 2 })
+  @Column("decimal", { scale: 2 })
   value: number;
 
   @ManyToOne(() => Category, { eager: true })
@@ -34,9 +34,9 @@ export default class Entry extends BaseEntity {
 
   static async findUserEntriesSum(userId: number) {
     const entriesSum = await Entry.createQueryBuilder("entries")
-    .select("SUM(entries.value)", "sum")
-    .where("user_id = :id", { id: userId })
-		.getRawOne();
+      .select("SUM(entries.value)", "sum")
+      .where("user_id = :id", { id: userId })
+      .getRawOne();
 
     return entriesSum.sum;
   }
