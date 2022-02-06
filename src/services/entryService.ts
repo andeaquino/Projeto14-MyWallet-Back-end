@@ -6,8 +6,8 @@ async function createEntry(userId: number, description: string, value: number, c
 }
 
 async function findUserEntries(userId: number) {
-  const entries = await Entry.find({ userId });
-  const total = await Entry.findUserEntriesSum(userId);
+  const entries = await Entry.findEntries(userId);
+  const total = await Entry.findEntriesSum(userId);
   return { entries, total };
 }
 
