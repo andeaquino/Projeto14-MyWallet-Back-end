@@ -15,11 +15,12 @@ export default class Category extends BaseEntity {
   @OneToMany(() => Entry, (entry) => entry.category)
   entries: Entry[];
 
-  static async findEntries(userId: number) {
+  static async findMonthEntries(userId: number) {
     const categoryEntries = await this.createQueryBuilder("categories")
       .leftJoin("categories.entries", "entries")
       .addSelect("SUM(entries.value)", "sum")
       .where("entries.user_id = :id", { id: userId })
+      .andWhere("entries.date >= date_trunc('month', CURRENT_DATE)")
       .groupBy("categories.id")
       .getRawMany();
 

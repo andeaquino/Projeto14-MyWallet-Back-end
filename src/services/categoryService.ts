@@ -6,7 +6,7 @@ async function findCategories() {
 }
 
 async function findCategoryEntries(userId: number) {
-  const categories = await Category.findEntries(userId);
+  const categories = await Category.findMonthEntries(userId);
   return categories;
 }
 

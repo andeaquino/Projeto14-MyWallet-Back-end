@@ -30,4 +30,13 @@ async function postEntry(req: UserInfoRequest, res: Response, next: NextFunction
   }
 }
 
-export { getEntries, postEntry };
+async function getSumPerMonth(req: UserInfoRequest, res: Response, next: NextFunction) {
+  try {
+		const entries = await service.findEntriesSumPerMonth(req.userId);
+    return res.send(entries);
+  } catch  (err) {
+     next(err);
+  }  
+}
+
+export { getEntries, postEntry, getSumPerMonth };

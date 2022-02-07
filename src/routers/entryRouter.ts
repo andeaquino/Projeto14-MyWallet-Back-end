@@ -5,5 +5,6 @@ const router = express.Router();
 
 router.get('/', controller.getEntries);
 router.post('/', controller.postEntry);
+router.get('/monthly', controller.getSumPerMonth);
 
 export default router;

@@ -32,7 +32,7 @@ export default class Entry extends BaseEntity {
     return newEntry;
   }
 
-  static async findEntries(userId: number) {
+  static async findFromUser(userId: number) {
     const entries = await Entry.createQueryBuilder("entries")
       .where("user_id = :id", { id: userId })
       .orderBy("entries.date", "DESC")
@@ -41,7 +41,7 @@ export default class Entry extends BaseEntity {
     return entries;
   }
 
-  static async findEntriesSum(userId: number) {
+  static async findSumFromUser(userId: number) {
     const entriesSum = await Entry.createQueryBuilder("entries")
       .select("SUM(entries.value)", "sum")
       .where("user_id = :id", { id: userId })
