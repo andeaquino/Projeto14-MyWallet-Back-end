@@ -49,4 +49,17 @@ export default class Entry extends BaseEntity {
 
     return entriesSum.sum;
   }
+
+  static async findSumPerMonth(userId: number) {
+    const entries = await Entry.createQueryBuilder("entries")
+      .where("user_id = :id", { id: userId })
+      .select("SUM(entries.value)", "sum")
+      .addSelect("EXTRACT(MONTH FROM entries.date)", "month")
+      .andWhere("entries.date >= date_trunc('year', CURRENT_DATE)")
+      .orderBy("month", "DESC")
+      .groupBy("month")
+      .getRawMany();
+
+    return entries;
+  }
 }

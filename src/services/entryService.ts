@@ -6,9 +6,12 @@ async function createEntry(userId: number, description: string, value: number, c
 }
 
 async function findUserEntries(userId: number) {
-  const entries = await Entry.findEntries(userId);
-  const total = await Entry.findEntriesSum(userId);
-  return { entries, total };
+ // const entries = await Entry.findEntries(userId);
+  //const total = await Entry.findEntriesSum(userId);
+ // return { entries, total };
+
+  const entries = await Entry.findSumPerMonth(userId);
+  return entries;
 }
 
 export { createEntry, findUserEntries };
